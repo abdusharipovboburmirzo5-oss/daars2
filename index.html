@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaxsiy Budjet Hisoblagich</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+
+        .card .amount {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .income .amount {
+            color: var(--success);
+        }
+
+        .expenses .amount {
+            color: var(--danger);
+        }
+
+        .balance .amount {
+            color: var(--primary);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section, .history-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #e11574;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--light);
+            transition: var(--transition);
+        }
+
+        .transaction-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex-grow: 1;
+        }
+
+        .transaction-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .transaction-category {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .income-transaction .transaction-amount {
+            color: var(--success);
+        }
+
+        .expense-transaction .transaction-amount {
+            color: var(--danger);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            transition: var(--transition);
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .chart-section {
+            margin-top: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-section select {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Animatsiyalar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .income-progress {
+            background-color: var(--success);
+        }
+
+        .expense-progress {
+            background-color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Shaxsiy Budjet Hisoblagich</h1>
+            <p class="subtitle">Daromad va xarajatlaringizni boshqaring, moliyaviy maqsadlaringizga erishing</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card income">
+                <h3>Jami Daromad</h3>
+                <div class="amount" id="total-income">0 so'm</div>
+                <div class="progress-bar">
+                    <div class="progress-fill income-progress" id="income-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="card expenses">
+                <h3>Jami Xarajat</h3>
+                <div class="amount" id="total-expenses">0 so'm</div>
+                <div class="progress-bar">
+                    <div class="progress-fill expense-progress" id="expense-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="card balance">
+                <h3>Qolgan Balans</h3>
+                <div class="amount" id="remaining-balance">0 so'm</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">Yangi Tranzaksiya Qo'shish</h2>
+                <form id="transaction-form">
+                    <div class="form-group">
+                        <label for="transaction-type">Tranzaksiya Turi</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="income" name="type" value="income" checked>
+                                <label for="income">Daromad</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="expense" name="type" value="expense">
+                                <label for="expense">Xarajat</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Sarlavha</label>
+                        <input type="text" id="title" placeholder="Masalan: Oylik maosh" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Miqdor (so'm)</label>
+                        <input type="number" id="amount" placeholder="Masalan: 1000000" min="0" step="1000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Kategoriya</label>
+                        <select id="category" required>
+                            <option value="">Kategoriyani tanlang</option>
+                            <!-- Kategoriyalar JavaScript orqali qo'shiladi -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Sana</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Izoh (ixtiyoriy)</label>
+                        <input type="text" id="description" placeholder="Qo'shimcha ma'lumot">
+                    </div>
+
+                    <button type="submit" class="btn btn-block">Tranzaksiyani Qo'shish</button>
+                </form>
+            </div>
+
+            <div class="history-section">
+                <div class="section-header">
+                    <h2 class="section-title">Tranzaksiya Tarixi</h2>
+                    <div class="filter-section">
+                        <select id="filter-type">
+                            <option value="all">Barcha tranzaksiyalar</option>
+                            <option value="income">Daromadlar</option>
+                            <option value="expense">Xarajatlar</option>
+                        </select>
+                        <select id="filter-category">
+                            <option value="all">Barcha kategoriyalar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="history-list" id="transaction-list">
+                    <!-- Tranzaksiyalar JavaScript orqali qo'shiladi -->
+                    <div class="empty-state">
+                        <i>📊</i>
+                        <p>Hali tranzaksiyalar mavjud emas</p>
+                        <p>Birinchi tranzaksiyangizni qo'shing</p>
+                    </div>
+                </div>
+
+                <button id="clear-all" class="btn btn-danger btn-block" style="margin-top: 20px;">
+                    Barcha Tranzaksiyalarni O'chirish
+                </button>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="section-title">Xarajatlar Tahlili</h2>
+            <div class="chart-container" id="chart-container">
+                <canvas id="expense-chart"></canvas>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 Shaxsiy Budjet Hisoblagichi. Barcha huquqlar himoyalangan.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dastur o'zgaruvchilari
+        let transactions = JSON.parse(localStorage.getItem('budgetTransactions')) || [];
+        let categories = {
+            income: ["Ish haqi", "Biznes", "Sovg'alar", "Investitsiyalar", "Qo'shimcha daromad"],
+            expense: ["Oziq-ovqat", "Transport", "Uy-joy", "Kiyim-kechak", "Sog'liq", "Ta'lim", "Ko'ngilochar", "Boshqalar"]
+        };
+
+        // DOM elementlari
+        const transactionForm = document.getElementById('transaction-form');
+        const transactionList = document.getElementById('transaction-list');
+        const totalIncomeEl = document.getElementById('total-income');
+        const totalExpensesEl = document.getElementById('total-expenses');
+        const remainingBalanceEl = document.getElementById('remaining-balance');
+        const filterType = document.getElementById('filter-type');
+        const filterCategory = document.getElementById('filter-category');
+        const clearAllBtn = document.getElementById('clear-all');
+        const incomeProgress = document.getElementById('income-progress');
+        const expenseProgress = document.getElementById('expense-progress');
+
+        // Dasturni ishga tushirish
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Dasturni boshlash
+        function initApp() {
+            // Joriy sanani o'rnatish
+            document.getElementById('date').valueAsDate = new Date();
+            
+            // Kategoriyalarni to'ldirish
+            populateCategories();
+            
+            // Tranzaksiyalarni ko'rsatish
+            updateUI();
+            
+            // Hodisa listener'larini qo'shish
+            setupEventListeners();
+        }
+
+        // Hodisa listener'larini sozlash
+        function setupEventListeners() {
+            // Formani yuborish
+            transactionForm.addEventListener('submit', addTransaction);
+            
+            // Filtrlarni o'zgartirish
+            filterType.addEventListener('change', updateUI);
+            filterCategory.addEventListener('change', updateUI);
+            
+            // Barcha tranzaksiyalarni o'chirish
+            clearAllBtn.addEventListener('click', clearAllTransactions);
+            
+            // Tranzaksiya turini o'zgartirganda kategoriyalarni yangilash
+            document.querySelectorAll('input[name="type"]').forEach(radio => {
+                radio.addEventListener('change', updateCategoryOptions);
+            });
+        }
+
+        // Kategoriyalarni to'ldirish
+        function populateCategories() {
+            const categorySelect = document.getElementById('category');
+            categorySelect.innerHTML = '<option value="">Kategoriyani tanlang</option>';
+            
+            // Daromad kategoriyalarini qo'shish
+            categories.income.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // Tranzaksiya turi o'zgarganda kategoriyalarni yangilash
+        function updateCategoryOptions() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const categorySelect = document.getElementById('category');
+            
+            categorySelect.innerHTML = '<option value="">Kategoriyani tanlang</option>';
+            
+            // Tegishli kategoriyalarni qo'shish
+            categories[type].forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // Yangi tranzaksiya qo'shish
+        function addTransaction(e) {
+            e.preventDefault();
+            
+            // Form ma'lumotlarini olish
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const title = document.getElementById('title').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value;
+            
+            // Yangi tranzaksiya yaratish
+            const transaction = {
+                id: Date.now(),
+                type,
+                title,
+                amount,
+                category,
+                date,
+                description,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Tranzaksiyalar ro'yxatiga qo'shish
+            transactions.push(transaction);
+            
+            // LocalStorage'ga saqlash
+            saveTransactions();
+            
+            // UI ni yangilash
+            updateUI();
+            
+            // Formani tozalash
+            transactionForm.reset();
+            document.getElementById('date').valueAsDate = new Date();
+            updateCategoryOptions();
+            
+            // Animatsiya effekti
+            showNotification(`${type === 'income' ? 'Daromad' : 'Xarajat'} muvaffaqiyatli qo'shildi!`, 'success');
+        }
+
+        // Tranzaksiyani o'chirish
+        function deleteTransaction(id) {
+            // Tranzaksiyani ro'yxatdan olib tashlash
+            transactions = transactions.filter(transaction => transaction.id !== id);
+            
+            // LocalStorage'ga saqlash
+            saveTransactions();
+            
+            // UI ni yangilash
+            updateUI();
+            
+            // Xabar ko'rsatish
+            showNotification('Tranzaksiya o\'chirildi!', 'danger');
+        }
+
+        // Barcha tranzaksiyalarni o'chirish
+        function clearAllTransactions() {
+            if (transactions.length === 0) return;
+            
+            if (confirm('Barcha tranzaksiyalarni o\'chirishni tasdiqlaysizmi? Bu amalni ortga qaytarib bo\'lmaydi.')) {
+                transactions = [];
+                saveTransactions();
+                updateUI();
+                showNotification('Barcha tranzaksiyalar o\'chirildi!', 'danger');
+            }
+        }
+
+        // Tranzaksiyalarni LocalStorage'ga saqlash
+        function saveTransactions() {
+            localStorage.setItem('budgetTransactions', JSON.stringify(transactions));
+        }
+
+        // UI ni yangilash
+        function updateUI() {
+            // Filtrlarni qo'llash
+            const filteredTransactions = filterTransactions();
+            
+            // Tranzaksiyalar ro'yxatini ko'rsatish
+            renderTransactionList(filteredTransactions);
+            
+            // Balanslarni yangilash
+            updateBalance();
+            
+            // Filtr kategoriyalarini yangilash
+            updateFilterCategories();
+            
+            // Chartni yangilash
+            updateChart();
+        }
+
+        // Tranzaksiyalarni filtrlash
+        function filterTransactions() {
+            const typeFilter = filterType.value;
+            const categoryFilter = filterCategory.value;
+            
+            return transactions.filter(transaction => {
+                // Tur bo'yicha filtrlash
+                if (typeFilter !== 'all' && transaction.type !== typeFilter) {
+                    return false;
+                }
+                
+                // Kategoriya bo'yicha filtrlash
+                if (categoryFilter !== 'all' && transaction.category !== categoryFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+        }
+
+        // Tranzaksiyalar ro'yxatini ko'rsatish
+        function renderTransactionList(transactionsToRender) {
+            if (transactionsToRender.length === 0) {
+                transactionList.innerHTML = `
+                    <div class="empty-state">
+                        <i>📊</i>
+                        <p>Tranzaksiyalar topilmadi</p>
+                        <p>Filtr sozlamalarini o'zgartiring yoki yangi tranzaksiya qo'shing</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Tranzaksiyalarni sanaga ko'ra tartiblash (eng yangisi birinchi)
+            transactionsToRender.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Tranzaksiyalar ro'yxatini yaratish
+            transactionList.innerHTML = transactionsToRender.map(transaction => `
+                <div class="transaction-item ${transaction.type}-transaction fade-in">
+                    <div class="transaction-info">
+                        <div class="transaction-title">${transaction.title}</div>
+                        <div class="transaction-category">${transaction.category} • ${formatDate(transaction.date)}</div>
+                        ${transaction.description ? `<div class="transaction-description">${transaction.description}</div>` : ''}
+                    </div>
+                    <div class="transaction-amount">
+                        ${transaction.type === 'income' ? '+' : '-'} ${formatCurrency(transaction.amount)}
+                    </div>
+                    <button class="delete-btn" onclick="deleteTransaction(${transaction.id})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Balanslarni yangilash
+        function updateBalance() {
+            // Daromad va xarajatlarni hisoblash
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const totalExpenses = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const remainingBalance = totalIncome - totalExpenses;
+            
+            // UI elementlarini yangilash
+            totalIncomeEl.textContent = formatCurrency(totalIncome);
+            totalExpensesEl.textContent = formatCurrency(totalExpenses);
+            remainingBalanceEl.textContent = formatCurrency(remainingBalance);
+            
+            // Balans rangini o'zgartirish
+            if (remainingBalance < 0) {
+                remainingBalanceEl.style.color = 'var(--danger)';
+            } else {
+                remainingBalanceEl.style.color = 'var(--success)';
+            }
+            
+            // Progress barlarni yangilash
+            const total = totalIncome + totalExpenses;
+            if (total > 0) {
+                incomeProgress.style.width = `${(totalIncome / total) * 100}%`;
+                expenseProgress.style.width = `${(totalExpenses / total) * 100}%`;
+            } else {
+                incomeProgress.style.width = '0%';
+                expenseProgress.style.width = '0%';
+            }
+        }
+
+        // Filtr kategoriyalarini yangilash
+        function updateFilterCategories() {
+            // Barcha mavjud kategoriyalarni olish
+            const allCategories = [...new Set(transactions.map(t => t.category))];
+            
+            // Filtr kategoriyalarini to'ldirish
+            filterCategory.innerHTML = '<option value="all">Barcha kategoriyalar</option>';
+            
+            allCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                filterCategory.appendChild(option);
+            });
+        }
+
+        // Valyuta formatlash
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('uz-UZ', {
+                style: 'currency',
+                currency: 'UZS',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Sana formatlash
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('uz-UZ', options);
+        }
+
+        // Xabarlarni ko'rsatish
+        function showNotification(message, type) {
+            // Notification elementini yaratish
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                color: white;
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            // Sahifaga qo'shish
+            document.body.appendChild(notification);
+            
+            // Ko'rsatish animatsiyasi
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Yashirish va o'chirish
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Chartni yangilash
+        function updateChart() {
+            const chartContainer = document.getElementById('chart-container');
+            const canvas = document.getElementById('expense-chart');
+            
+            // Agar tranzaksiyalar bo'lmasa, chartni yashirish
+            if (transactions.filter(t => t.type === 'expense').length === 0) {
+                chartContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i>📉</i>
+                        <p>Xarajatlar tahlili uchun ma'lumot yetarli emas</p>
+                        <p>Xarajat tranzaksiyalarini qo'shing</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Agar canvas mavjud bo'lmasa, yaratish
+            if (!canvas) {
+                chartContainer.innerHTML = '<canvas id="expense-chart"></canvas>';
+            }
+            
+            // Xarajatlar bo'yicha ma'lumotlarni yig'ish
+            const expenseData = {};
+            transactions
+                .filter(t => t.type === 'expense')
+                .forEach(t => {
+                    if (expenseData[t.category]) {
+                        expenseData[t.category] += t.amount;
+                    } else {
+                        expenseData[t.category] = t.amount;
+                    }
+                });
+            
+            // Chartni chizish
+            const ctx = document.getElementById('expense-chart').getContext('2d');
+            
+            // Agar avvalgi chart bo'lsa, uni yo'q qilish
+            if (window.expenseChart) {
+                window.expenseChart.destroy();
+            }
+            
+            // Yangi chart yaratish
+            window.expenseChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(expenseData),
+                    datasets: [{
+                        data: Object.values(expenseData),
+                        backgroundColor: [
+                            '#f72585', '#7209b7', '#3a0ca3', '#4361ee', 
+                            '#4cc9f0', '#4895ef', '#560bad', '#b5179e'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = Object.values(expenseData).reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${formatCurrency(value)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
